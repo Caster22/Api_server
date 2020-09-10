@@ -2,17 +2,21 @@ const express = require('express');
 const router = express.Router();
 const db = require('./../db');
 
+const filterById = id => {
+    db.testimonials.filter(item => item.id == id)
+};
+
 router.route('/testimonials').get((req, res) => {
     res.json(db.testimonials);
 });
 
 router.route('/testimonials:id').get((req, res) => {
-    res.json(db.testimonials.filter(item => item.id === parseInt(req.params.id)));
+    res.json(filterById(req.params.id));
 });
 
 router.route('/testimonials/random').get((req, res) => {
     const randomEl = db.testimonials[Math.floor(Math.random() * db.testimonials.length)];
-    res.json(db.testimonials.filter(item => item.id === randomEl.id));
+    res.json(filterById(randomEl.id));
 });
 
 router.route('/testimonials').post((req, res) => {
@@ -26,7 +30,7 @@ router.route('/testimonials').post((req, res) => {
 });
 
 router.route('/testimonials:id').put((req, res) => {
-    db.testimonials.filter(item => item.id === parseInt(req.params.id)).forEach(item => {
+    filterById(req.params.id).forEach(item => {
         item.author = req.body.author;
         item.text = req.body.text;
     });
@@ -34,7 +38,9 @@ router.route('/testimonials:id').put((req, res) => {
 });
 
 router.route('/testimonials/:id').delete((req, res) => {
-    if(db.testimonials.indexOf(db.testimonials.filter(item => item.id === parseInt(req.params.id))[0]) > - 1)
-        db.testimonials.splice(db.testimonials.indexOf(db.testimonials.filter(item => item.id === parseInt(req.params.id))[0]), 1);
+    if(db.testimonials.indexOf(filterById(req.params.id)[0]) > - 1)
+        db.testimonials.splice(db.testimonials.indexOf(filterById(req.params.id)[0]), 1);
     res.json({ message: 'OK'});
 });
+
+module.exports = router;
