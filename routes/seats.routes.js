@@ -11,15 +11,21 @@ router.route('/seats/:id').get((req, res) => {
 });
 
 router.route('/seats').post((req, res) => {
-    const endId = db.seats[db.seats.length - 1].id + 1;
-    db.seats.push({
-        id: endId,
-        day: req.body.day,
-        seat: req.body.seat,
-        client: req.body.client,
-        email: req.body.email,
-    });
-    res.json({ message: 'OK' });
+    const daysFilter = db.seats.filter(seat => seat.day == req.body.day);
+    const seatFilter = seat => seat.seat == req.body.seat;
+    if (daysFilter.some(seatFilter)) {
+        res.status(403).json({ message: 'This slot is taken...' });
+    }else {
+        const endId = db.seats[db.seats.length - 1].id + 1;
+        db.seats.push({
+            id: endId,
+            day: req.body.day,
+            seat: req.body.seat,
+            client: req.body.client,
+            email: req.body.email,
+        });
+        res.json({ message: 'OK' });
+    }
 });
 
 router.route('/seats/:id').delete((req, res) => {
