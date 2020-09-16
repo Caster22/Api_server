@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
+const socket = require('socket.io');
 
 const app = express();
 
@@ -26,6 +27,12 @@ app.use((req, res) => {
     res.status(404).json({message: 'Error 404 Page not found...'})
 });
 
-app.listen(process.env.PORT || 8000, () => {
+const server = app.listen(process.env.PORT || 8000, () => {
     console.log('Server is running on port: 8000');
+});
+
+const io = socket(server);
+
+io.on('connection', (socket) => {
+    console.log(`${socket.id} has connected!`);
 });
