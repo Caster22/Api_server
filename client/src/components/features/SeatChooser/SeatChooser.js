@@ -38,7 +38,7 @@ class SeatChooser extends React.Component {
   render() {
 
     const { prepareSeat } = this;
-    const { requests } = this.props;
+    const { requests, unbookedSeats } = this.props;
 
     return (
       <div>
@@ -48,7 +48,7 @@ class SeatChooser extends React.Component {
         { (requests['LOAD_SEATS'] && requests['LOAD_SEATS'].success) && <div className="seats">{[...Array(50)].map((x, i) => prepareSeat(i+1) )}</div>}
         { (requests['LOAD_SEATS'] && requests['LOAD_SEATS'].pending) && <Progress animated color="primary" value={50} /> }
         { (requests['LOAD_SEATS'] && requests['LOAD_SEATS'].error) && <Alert color="warning">Couldn't load seats...</Alert> }
-        <strong>Unbooked seats: /15</strong>
+        <strong>Unbooked seats: { 50 - unbookedSeats}/50</strong>
       </div>
     )
   };
