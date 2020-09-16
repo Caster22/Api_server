@@ -15,6 +15,11 @@ app.use(cors());
 
 app.use(express.static(path.join(__dirname, '/client/build')))
 
+app.use((req, res, next) => {
+   req.io = io;
+   next();
+});
+
 app.use('/api', testimonialsRoute);
 app.use('/api', concertsRoute);
 app.use('/api', seatsRoute);
@@ -34,5 +39,5 @@ const server = app.listen(process.env.PORT || 8000, () => {
 const io = socket(server);
 
 io.on('connection', (socket) => {
-    console.log(`${socket.id} has connected!`);
+    console.log(`New socket! ${socket.id}`);
 });
