@@ -1,49 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const db = require('./../db');
+const SeatsController = require('../controllesrs/seats.controller');
 
-router.route('/seats').get((req, res) => {
-    res.json(db.seats);
-});
+router.get('/seats', SeatsController.getAll);
 
-router.route('/seats/:id').get((req, res) => {
-    res.json(db.seats.filter(item => item.id === parseInt(req.params.id)));
-});
+router.get('/seats/:id', SeatsController.getById);
 
-router.route('/seats').post((req, res) => {
-    const daysFilter = db.seats.filter(seat => seat.day == req.body.day);
-    const seatFilter = seat => seat.seat == req.body.seat;
-    if (daysFilter.some(seatFilter)) {
-        res.status(403).json({ message: 'This slot is taken...' });
-    }else {
-        const endId = db.seats[db.seats.length - 1].id + 1;
-        db.seats.push({
-            id: endId,
-            day: req.body.day,
-            seat: req.body.seat,
-            client: req.body.client,
-            email: req.body.email,
-        });
-        req.io.emit('seatsUpdated', db.seats);
-        res.json({ message: 'OK' });
-    }
-});
+router.post('/seats', SeatsController.postNew);
 
-router.route('/seats/:id').delete((req, res) => {
-    if(db.seats.indexOf(db.seats.filter(item => item.id === parseInt(req.params.id))[0]) > - 1)
-        db.seats.splice(db.seats.indexOf(db.seats.filter(item => item.id === parseInt(req.params.id))[0]), 1);
-    res.json({ message: 'OK' });
-});
+router.delete('/seats/:id', SeatsController.removeById);
 
-router.route('/seats/:id').put((req, res) => {
-    db.seats.filter(item => item.id === parseInt(req.params.id)).forEach(item => {
-        item.day = req.body.day;
-        item.seat = req.body.seat;
-        item.client = req.body.client;
-        item.email = req.body.email;
-    });
-
-    res.json({ message: 'OK' });
-});
+router.put('/seats/:id', SeatsController.updateById);
 
 module.exports = router;
