@@ -19,6 +19,22 @@ exports.getById = async (req, res) => {
 	}
 };
 
+exports.getByPerformer = async (req, res) => {
+
+};
+
+exports.getByGenre = async (req, res) => {
+
+};
+
+exports.getByPriceRange = async (req, res) => {
+
+};
+
+exports.getByDay = async (req, res) => {
+
+};
+
 exports.postNew = async (req, res) => {
 	const { performer, genre, price, day, image } = req.body;
 
