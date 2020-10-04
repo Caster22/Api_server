@@ -37,7 +37,7 @@ app.use((req, res) => {
 
 /* Start DataBase */
 
-mongoose.connect('mongodb+srv://Caster22:polska22@cluster0.hud0b.mongodb.net/NewWaveDB?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb+srv://' + process.env.Log + ':' + process.env.Pas + '@cluster0.hud0b.mongodb.net/NewWaveDB?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 
 db.once('open', () => {
