@@ -3,6 +3,7 @@ const path = require('path');
 const cors = require('cors');
 const socket = require('socket.io');
 const mongoose = require('mongoose');
+const helmet = require('helmet');
 
 /* Import and use Endpoints */
 
@@ -15,6 +16,7 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors());
+app.use(helmet());
 
 app.use(express.static(path.join(__dirname, '/client/build')))
 
@@ -37,7 +39,7 @@ app.use((req, res) => {
 
 /* Start DataBase */
 
-const dbURI = process.env.NODE_ENV === 'production' ? 'mongodb+srv://' + process.env.Log + ':' + process.env.Pas + '@cluster0.hud0b.mongodb.net/NewWaveDB?retryWrites=true&w=majority' : 'mongodb://localhost:27017/NewWaveDB';
+const dbURI = process.env.NODE_ENV === 'production' ? `mongodb+srv://${process.env.Pas}:${process.env.Log}@cluster0.hud0b.mongodb.net/NewWaveDB?retryWrites=true&w=majority` : 'mongodb://localhost:27017/NewWaveDB';
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 
